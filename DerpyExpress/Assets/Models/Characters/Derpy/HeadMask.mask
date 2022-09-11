@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HeadMask
+  m_Mask: 00000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 0
+  - m_Path: Armature/Pelvis
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder/LeftForearm
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder/LeftForearm/LeftHand
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder/LeftForearm/LeftHand/LeftBall
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder/LeftForearm/LeftHand/LeftBall/LeftBall_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Neck
+    m_Weight: 1
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head
+    m_Weight: 1
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head/hairBack
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head/hairFront
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head/Head_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/RightShoulder
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/RightShoulder/RightForearm
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/RightShoulder/RightForearm/RightHand
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/RightShoulder/RightForearm/RightHand/RightBall
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/RightShoulder/RightForearm/RightHand/RightBall/RightBall_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.L
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.L/Wing2.L
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.L/Wing2.L/Wing3.L
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.L/Wing2.L/Wing3.L/Wing3.L_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.R
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.R/Wing2.R
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.R/Wing2.R/Wing3.R
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/Chest1/Chest2/Wing1.R/Wing2.R/Wing3.R/Wing3.R_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftButt
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftButt/LeftButt_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftLeg1
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftLeg1/LeftLeg2
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftLeg1/LeftLeg2/LeftFoot
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/LeftThigh/LeftLeg1/LeftLeg2/LeftFoot/LeftFoot_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightButt
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightButt/RightButt_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightLeg1
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightLeg1/RightLeg2
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightLeg1/RightLeg2/RightFoot
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/RightThigh/RightLeg1/RightLeg2/RightFoot/RightFoot_end
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1/Tail2
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1/Tail2/Tail3
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1/Tail2/Tail3/jiggle_tail1
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1/Tail2/Tail3/jiggle_tail1/jiggle_tail2
+    m_Weight: 0
+  - m_Path: Armature/Pelvis/TailBase/Tail1/Tail2/Tail3/jiggle_tail1/jiggle_tail2/jiggle_tail2_end
+    m_Weight: 0
+  - m_Path: dock
+    m_Weight: 0
+  - m_Path: Sphere
+    m_Weight: 0
+  - m_Path: tail
+    m_Weight: 0
+  - m_Path: WingL
+    m_Weight: 0
+  - m_Path: WingR
+    m_Weight: 0

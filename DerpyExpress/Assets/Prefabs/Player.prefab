@@ -46,13 +46,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0.5
-  m_Radius: 0.2
+  m_Height: 0.46
+  m_Radius: 0.13
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.15
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.31, z: 0}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &4938959334693693574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,8 +66,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 10
+  crouchSpeed: 1.5
   speed: 2
   runSpeed: 6
+  isCrouching: 0
 --- !u!1 &195284638429588624
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +268,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c2d51c46da2be8d478186561d4762ce3, type: 2}
+    - target: {fileID: 8743813690021804245, guid: aee9253a20f211a47a828dc8e4ca366f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0186372595569ab4e82f8ee1f71f9692, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aee9253a20f211a47a828dc8e4ca366f, type: 3}
 --- !u!4 &5191246807640551570 stripped

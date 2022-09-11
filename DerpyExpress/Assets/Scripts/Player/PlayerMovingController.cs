@@ -8,26 +8,23 @@ namespace DerpyExpress.Player
         const string CAMERA_NAME = "rotationHelper";
         const string MESH_NAME = "derpy";
 
-        public bool isRunning;
+        const float ACCELERATION = 4f;
+        const float DEACCELERATION = 8f;
 
         public Animator anim;
         private GameObject cameraHelper;
         private CharacterController controller;
         private GameObject mesh;
+        private Player player;
+        private float gravity = 6f;
+        private float tempSpeed = 0f;
 
         private float smoothRotVelocity;
-        private float smoothRotTime = 0.05f;
-        
-
-        private float gravity = 6f;
-        private float speed = 3f;
-        private float runSpeed = 6f;
+        private float smoothRotTime = 0.16f;
 
         public PlayerMovingController(Player player)
         {
-            gravity = player.gravity;
-            speed = player.speed;
-            runSpeed = player.runSpeed;
+            this.player = player;
 
             cameraHelper = GetChildObject(player.transform, CAMERA_NAME);
             mesh = GetChildObject(player.transform, MESH_NAME);
@@ -35,19 +32,33 @@ namespace DerpyExpress.Player
             anim = mesh.GetComponent<Animator>();
         }
 
+        public void UpdateCrouching(bool on)
+        {
+            anim.SetBool("crouch", on);
+            if (on)
+            {
+                controller.height = 0;
+                controller.center = new Vector3(0, 0.15f, 0);
+            }
+            else
+            {
+                controller.height = 0.47f;
+                controller.center = new Vector3(0, 0.25f, 0);
+            }
+        }
+
         public void UpdateMovement()
         {
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+            Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-            float tempSpeed = GetSpeed(horizontal, vertical);
-            if (tempSpeed > 0)
+            float tempSpeed = GetSpeed(input);
+            if (input.magnitude > 0)
             {
                 mesh.transform.localEulerAngles = new Vector3(
                     0,
                     Mathf.SmoothDampAngle(
                         mesh.transform.localEulerAngles.y, 
-                        GetYDirection(horizontal, vertical),
+                        GetYDirection(input),
                         ref smoothRotVelocity,
                         smoothRotTime),
                     0
@@ -66,19 +77,19 @@ namespace DerpyExpress.Player
             return transform.Find(name).gameObject;
         }
 
-        private float GetYDirection(float horizonal, float vertical)
+        private float GetYDirection(Vector2 input)
         {
             float forwardRotation = cameraHelper.transform.localEulerAngles.y;
 
-            if (horizonal > 0)
+            if (input.x > 0)
             {
-                forwardRotation += GetVerticalRotation(vertical);
+                forwardRotation += GetVerticalRotation(input.y);
             }
-            else if (horizonal < 0)
+            else if (input.x < 0)
             {
-                forwardRotation -= GetVerticalRotation(vertical);
+                forwardRotation -= GetVerticalRotation(input.y);
             }
-            else if (vertical < 0)
+            else if (input.y < 0)
             {
                 forwardRotation += 180f;
             }
@@ -98,20 +109,49 @@ namespace DerpyExpress.Player
             }
         }
 
-        private float GetSpeed(float horizonal, float vertical)
+        private float GetSpeed(Vector2 input)
         {
-            if (horizonal == 0 && vertical == 0) 
+            float target = GetSpeedTarget(input);
+
+            if (tempSpeed > target + 0.2f)
             {
-                isRunning = false;
+                tempSpeed -= DEACCELERATION * Time.deltaTime;
+            }
+            else if(tempSpeed < target - 0.2f)
+            {
+                tempSpeed += ACCELERATION * Time.deltaTime;
+            }
+            else 
+            {
+                tempSpeed = target;
+            }
+
+            return tempSpeed;
+        }
+
+        private float GetSpeedTarget(Vector2 input)
+        {
+            if (input.magnitude == 0) 
+            {
                 return 0;
             }
-
-            if (!isRunning)
+            else if (player.isCrouching)
             {
-                isRunning = Input.GetAxis("Run") > 0;
+                return player.crouchSpeed;
             }
+            else if (isRunning())
+            {
+                return player.runSpeed;
+            }
+            else
+            {
+                return player.speed;
+            }
+        }
 
-            return isRunning ? runSpeed : speed;
+        private bool isRunning()
+        {
+            return !player.isCrouching && Input.GetButton("Run");
         }
     }
 }
