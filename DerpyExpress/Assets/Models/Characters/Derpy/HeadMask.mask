@@ -30,7 +30,7 @@ AvatarMask:
   - m_Path: Armature/Pelvis/Chest1/Chest2/LeftShoulder/LeftForearm/LeftHand/LeftBall/LeftBall_end
     m_Weight: 0
   - m_Path: Armature/Pelvis/Chest1/Chest2/Neck
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head
     m_Weight: 1
   - m_Path: Armature/Pelvis/Chest1/Chest2/Neck/Head/hairBack

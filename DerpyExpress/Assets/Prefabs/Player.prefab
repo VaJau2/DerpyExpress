@@ -66,10 +66,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 10
+  jumpSpeed: 6
   crouchSpeed: 1.5
   speed: 2
   runSpeed: 6
+  flySpeed: 10
   isCrouching: 0
+  isFlying: 0
 --- !u!1 &195284638429588624
 GameObject:
   m_ObjectHideFlags: 0

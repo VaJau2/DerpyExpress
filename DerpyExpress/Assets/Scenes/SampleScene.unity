@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4384073, g: 0.4864779, b: 0.5667525, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -230,6 +230,22 @@ PrefabInstance:
     - target: {fileID: 180859723913420953, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4938959334693693574, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
+      propertyPath: speed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4938959334693693574, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
+      propertyPath: gravity
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4938959334693693574, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
+      propertyPath: runSpeed
+      value: 6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4938959334693693574, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
+      propertyPath: jumpSpeed
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4938959334693693574, guid: 62b70dbe7a1f3b3448e4ec4d1be7d79e, type: 3}
       propertyPath: rotationSpeed
@@ -757,14 +773,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.5897528, y: -0.2049775, z: 0.15802377, w: 0.7649866}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 75.26, y: -30, z: 0}
 --- !u!1 &1083208989
 GameObject:
   m_ObjectHideFlags: 0

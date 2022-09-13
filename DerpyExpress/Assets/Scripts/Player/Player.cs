@@ -1,4 +1,5 @@
 using UnityEngine;
+using DerpyExpress.Player.Controllers;
 
 namespace DerpyExpress.Player
 {
@@ -6,13 +7,16 @@ namespace DerpyExpress.Player
     public class Player : MonoBehaviour
     {
         public float gravity = 6f;
+        public float jumpSpeed = 6f;
         public float crouchSpeed = 1.5f;
         public float speed = 2.5f;
         public float runSpeed = 6.5f;
+        public float flySpeed = 10f;
 
         public bool isCrouching;
-        
-        private PlayerMovingController controller;
+        public bool isFlying;
+        private BaseController controller;
+        private float jumpCooldown;
 
         public void Start() 
         {
@@ -22,18 +26,11 @@ namespace DerpyExpress.Player
         public void Update() 
         {
             controller.UpdateMovement();
-            UpdateCrouching();
         }
 
-        private void UpdateCrouching()
+        public void SetMovementController(BaseController newController)
         {
-            if (!Input.GetButtonDown("Crouch"))
-            {
-                return;
-            }
-
-            isCrouching = !isCrouching;
-            controller.UpdateCrouching(isCrouching);
+            controller = newController;
         }
     }
 }
