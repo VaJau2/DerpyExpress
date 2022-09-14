@@ -19,7 +19,7 @@ namespace DerpyExpress.Player.Controllers
         private float tempDeacceleration;
 
         private Vector3 dir;
-        private FlyDirection flyDirection;
+        private FlyDirection flyDirection = FlyDirection.back;
 
         private float flySpeed;
 
@@ -56,10 +56,10 @@ namespace DerpyExpress.Player.Controllers
             }
             else
             {
-                RotateTowardDirection();
+                UpdateDirRotation();
                 UpdateDynamicVariables();
                 
-                if (Input.GetButtonDown("Jump") && flyCooldown <= 0)
+                if (Input.GetButton("Jump") && flyCooldown <= 0)
                 {
                     tempDeacceleration = 0;
                     flyCooldown = FLY_COOLDOWN;
@@ -70,22 +70,9 @@ namespace DerpyExpress.Player.Controllers
                         flySpeed += FLY_DELTA;
                     }
 
-                    Vector2 input = GetInput();
-                    if (input.magnitude > 0)
+                    if (GetInput().magnitude > 0)
                     {
-                        if (input.y != 0)
-                        {
-                            flyDirection = FlyDirection.forward;
-                        }
-                        else if (input.x < 0)
-                        {
-                            flyDirection = FlyDirection.left;
-                        }
-                        else if (input.x > 0)
-                        {
-                            flyDirection = FlyDirection.right;
-                        }
-
+                        UpdateFlyDirectionFromInput();
                         dir = GetFlyDirection();
                     }
                     else
@@ -106,7 +93,11 @@ namespace DerpyExpress.Player.Controllers
             }
        
             anim.SetFloat("side", GetInput().x);
-            anim.SetFloat("speed", GetSpeed() * flySpeed * 2);
+            anim.SetFloat(
+                "speed", 
+                flyDirection == FlyDirection.forward ? GetSpeed() * flySpeed * 2 : 0
+            );
+            
             controller.Move(dir * Time.deltaTime);
         }
 
@@ -128,6 +119,29 @@ namespace DerpyExpress.Player.Controllers
             }
         }
 
+        private void UpdateFlyDirectionFromInput()
+        {
+            Vector2 input = GetInput();
+
+            if (input.y > 0)
+            {
+                flyDirection = FlyDirection.forward;
+            }
+            else
+            {
+                flyDirection = FlyDirection.back;
+
+                if (input.x < 0)
+                {
+                    flyDirection = FlyDirection.left;
+                }
+                else if (input.x > 0)
+                {
+                    flyDirection = FlyDirection.right;
+                }
+            }
+        }
+
         private Vector3 GetFlyDirection()
         {
             switch (flyDirection)
@@ -138,6 +152,8 @@ namespace DerpyExpress.Player.Controllers
                     return -mesh.transform.right * (flySpeed / 2);
                 case FlyDirection.right:
                     return mesh.transform.right * (flySpeed / 2);
+                case FlyDirection.back:
+                    return -mesh.transform.forward * (flySpeed / 2);
             }
 
             return Vector3.zero;
@@ -154,7 +170,7 @@ namespace DerpyExpress.Player.Controllers
 
             if (flyDirection == FlyDirection.forward)
             {
-                if (GetSpeed() * flySpeed > 1)
+                if (GetSpeed() * flySpeed > 0.1f)
                 {
                     rotation.x = cameraHelper.transform.localEulerAngles.x;
                     rotation.z = Mathf.Clamp((-smoothRotVelocity / 9f), -80, 80);
@@ -166,9 +182,10 @@ namespace DerpyExpress.Player.Controllers
 
         protected override float GetYDirection(Vector2 input)
         {
-            if (GetSpeed() * flySpeed < 1)
+            if (flyDirection != FlyDirection.forward)
             {
                 input.x = 0;
+                input.y = 1;
             }
 
             return base.GetYDirection(input);
@@ -186,7 +203,7 @@ namespace DerpyExpress.Player.Controllers
             }
         }
 
-        private void RotateTowardDirection()
+        private void UpdateDirRotation()
         {
             if (dir.x != 0 || dir.z != 0)
             {
@@ -204,6 +221,6 @@ namespace DerpyExpress.Player.Controllers
 
     public enum FlyDirection
     {
-        forward, left, right
+        forward, left, right, back
     }
 }
