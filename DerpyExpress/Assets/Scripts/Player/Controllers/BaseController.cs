@@ -18,7 +18,7 @@ namespace DerpyExpress.Player.Controllers
         protected float deacceleration = 8f;
 
         protected float smoothRotVelocity;
-        private float smoothRotTime = 0.16f;
+        protected float smoothRotTime = 0.16f;
 
         public BaseController(Player player)
         {
