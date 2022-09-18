@@ -4,177 +4,125 @@ namespace DerpyExpress.Player.Controllers
 {
     class PlayerFlyingController : BaseController
     {
-        private const float JUMP_START_TIME = 0.5f;
-        private const float JUMP_SPEED = 5f;
-        private const float MIN_JUMP_SPEED = 4f;
-        private const float FLY_DELTA = 5f;
-        private const float MAX_FLY_SPEED = 9f;
-        private const float DEACCELERATION = 6f;
-        private const float FLY_COOLDOWN = 0.5f;
-        private bool isJumping;
-        private float jumpSpeed;
-        private float jumpStartingTime;
-
-        private float flyCooldown;
-        private float tempDeacceleration;
+        private const float HORIZONTAL_FLY_SPEED = 3f;
+        private const float FLY_SPEED = 2f;
+        private const float MAX_FLY_SPEED = 8f;
+        
+        private float flyForwardSpeed = 1;
+        private float animSpeed;
+        private float smoothRotX, smoothRotZ;
 
         private Vector3 dir;
-        private FlyDirection flyDirection = FlyDirection.back;
-
-        private float flySpeed;
 
         public PlayerFlyingController(Player player, bool jump = true): base(player) 
         {
-            acceleration = 5f * Time.deltaTime;
-            deacceleration = 5f * Time.deltaTime;
+            deacceleration = 2f;
             dir = Vector3.zero;
-
-            if (jump)
-            {
-                anim.SetTrigger("jump");
-                isJumping = true;
-                jumpSpeed = JUMP_SPEED;
-                jumpStartingTime = JUMP_START_TIME;
-            }
         }
 
         public override void UpdateMovement()
         {
-            if (jumpStartingTime > 0)
-            {
-                jumpStartingTime -= Time.deltaTime;
-                return;
-            }
-
-            anim.SetBool("on_floor", controller.isGrounded);
             mesh.transform.localEulerAngles = GetRotation();
+           
+            UpdateFlyForwardSpeed();
+            UpdateDirRotation();
 
-            if (isJumping)
+            if (GetInput().magnitude > 0)
             {
-                UpdateJumpSpeed();
-                dir.y = jumpSpeed;
+                dir = GetFlyDirection();
             }
             else
             {
-                UpdateDirRotation();
-                UpdateDynamicVariables();
-                
-                if (Input.GetButton("Jump") && flyCooldown <= 0)
-                {
-                    tempDeacceleration = 0;
-                    flyCooldown = FLY_COOLDOWN;
-                    anim.SetTrigger("jump");
-
-                    if (flySpeed < MAX_FLY_SPEED)
-                    {
-                        flySpeed += FLY_DELTA;
-                    }
-
-                    if (GetInput().magnitude > 0)
-                    {
-                        UpdateFlyDirectionFromInput();
-                        dir = GetFlyDirection();
-                    }
-                    else
-                    {
-                        dir = mesh.transform.up * (flySpeed / 2);
-                    }
-                }
-                
-                if (flySpeed < 5 && dir.y > -player.gravity)
-                {
-                    dir.y -= player.gravity * Time.deltaTime;
-                }
-
-                if (controller.isGrounded)
-                {
-                    OnLandOnFloor();
-                }
+                dir.y = 0;
             }
-       
+
+            if (Input.GetButton("Jump"))
+            {
+                dir.y = FLY_SPEED;
+            }
+            else if (Input.GetButton("Run"))
+            {
+                dir.y = -FLY_SPEED;
+            }
+
+            if (controller.isGrounded)
+            {
+                OnLandOnFloor();
+            }
+
+            anim.SetBool("on_floor", controller.isGrounded);
+            anim.SetBool("jump", !Input.GetButton("Run"));
             anim.SetFloat("side", GetInput().x);
-            anim.SetFloat(
-                "speed", 
-                flyDirection == FlyDirection.forward ? GetSpeed() * flySpeed * 2 : 0
-            );
+            anim.SetFloat("speed", GetAnimSpeed());
             
             controller.Move(dir * Time.deltaTime);
         }
 
-        private void UpdateDynamicVariables()
+        private void UpdateFlyForwardSpeed()
         {
-            if (flyCooldown > 0)
+            if (GetInput().y > 0)
             {
-                flyCooldown -= Time.deltaTime;
-            }
-
-            if (tempDeacceleration < DEACCELERATION)
-            {
-                tempDeacceleration += 2f * Time.deltaTime;
-            }
-
-            if (flySpeed > 0)
-            {
-                flySpeed -= tempDeacceleration * Time.deltaTime;
-            }
-        }
-
-        private void UpdateFlyDirectionFromInput()
-        {
-            Vector2 input = GetInput();
-
-            if (input.y > 0)
-            {
-                flyDirection = FlyDirection.forward;
+                if (flyForwardSpeed < MAX_FLY_SPEED)
+                {
+                    flyForwardSpeed += Time.deltaTime;
+                }
             }
             else
             {
-                flyDirection = FlyDirection.back;
-
-                if (input.x < 0)
-                {
-                    flyDirection = FlyDirection.left;
-                }
-                else if (input.x > 0)
-                {
-                    flyDirection = FlyDirection.right;
-                }
+                flyForwardSpeed = 1;
             }
         }
 
         private Vector3 GetFlyDirection()
         {
-            switch (flyDirection)
+            Vector2 input = GetInput();
+            Vector3 target = new Vector3();
+
+            if (input.x > 0)
             {
-                case FlyDirection.forward:
-                    return mesh.transform.forward * flySpeed;
-                case FlyDirection.left:
-                    return -mesh.transform.right * (flySpeed / 2);
-                case FlyDirection.right:
-                    return mesh.transform.right * (flySpeed / 2);
-                case FlyDirection.back:
-                    return -mesh.transform.forward * (flySpeed / 2);
+                target += mesh.transform.right * HORIZONTAL_FLY_SPEED;
+            }
+            else if (input.x < 0)
+            {
+                target -= mesh.transform.right * HORIZONTAL_FLY_SPEED;
             }
 
-            return Vector3.zero;
+            if (input.y > 0)
+            {
+                target += mesh.transform.forward * HORIZONTAL_FLY_SPEED * flyForwardSpeed;
+            }
+            else if (input.y < 0)
+            {
+                target -= mesh.transform.forward * HORIZONTAL_FLY_SPEED;
+            }
+
+            if (target.magnitude > 0)
+            {
+                return target;
+            }
+
+            return Vector3.Lerp(dir, Vector3.zero, deacceleration * Time.deltaTime);
         }
 
         protected override Vector3 GetRotation()
         {
-            if (isJumping)
-            {
-                return mesh.transform.localEulerAngles;
-            }
-
+            Vector2 input = GetInput();
             Vector3 rotation = base.GetRotation();
-
-            if (flyDirection == FlyDirection.forward)
+            
+            if (input.y > 0 && input.x == 0)
             {
-                if (GetSpeed() * flySpeed > 0.1f)
-                {
-                    rotation.x = cameraHelper.transform.localEulerAngles.x;
-                    rotation.z = Mathf.Clamp((-smoothRotVelocity / 9f), -80, 80);
-                }
+                rotation.x = cameraHelper.transform.localEulerAngles.x;
+                rotation.z = Mathf.Clamp((-smoothRotVelocity / 9f), -60, 60);
+            }
+            else
+            {
+                Vector3 currentRotation = mesh.transform.localEulerAngles;
+                
+                rotation = new Vector3(
+                    Mathf.SmoothDampAngle(currentRotation.x, 0, ref smoothRotX, smoothRotTime),
+                    rotation.y,
+                    Mathf.SmoothDampAngle(currentRotation.z, 0, ref smoothRotZ, smoothRotTime)
+                );
             }
 
             return rotation;
@@ -182,25 +130,13 @@ namespace DerpyExpress.Player.Controllers
 
         protected override float GetYDirection(Vector2 input)
         {
-            if (flyDirection != FlyDirection.forward)
+            if (GetInput().y <= 0)
             {
                 input.x = 0;
                 input.y = 1;
             }
 
             return base.GetYDirection(input);
-        }
-
-        private void UpdateJumpSpeed()
-        {
-            if (jumpSpeed > MIN_JUMP_SPEED)
-            {
-                jumpSpeed -= DEACCELERATION * Time.deltaTime;
-            }
-            else
-            {
-                isJumping = false;
-            }
         }
 
         private void UpdateDirRotation()
@@ -217,10 +153,19 @@ namespace DerpyExpress.Player.Controllers
             player.isFlying = false;
             player.SetMovementController(new PlayerMovingController(player));
         }
-    }
 
-    public enum FlyDirection
-    {
-        forward, left, right, back
+        private float GetAnimSpeed()
+        {
+            if (GetInput().y > 0)
+            {
+                animSpeed = flyForwardSpeed - 1;
+            }
+            else
+            {
+                animSpeed = Mathf.Lerp(animSpeed, 0, deacceleration * Time.deltaTime);
+            }
+
+            return animSpeed;
+        }
     }
 }

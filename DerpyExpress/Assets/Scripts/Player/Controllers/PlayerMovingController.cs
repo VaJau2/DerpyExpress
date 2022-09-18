@@ -5,13 +5,20 @@ namespace DerpyExpress.Player.Controllers
 {
     class PlayerMovingController : BaseController
     {
+        private const float JUMP_START_TIME = 0.5f;
+        private const float LAND_TIME = 0.5f;
+        private const float JUMP_SPEED = 4f;
+        private const float MIN_JUMP_SPEED = 1f;
+        private const float DEACCELERATION = 5f;
         private bool isJumping;
-
-        private float jumpCooldown = 0f;
+        private float jumpSpeed;
+        private float jumpCooldownTime;
+        private float groundedCheckStartCooldown = 0.5f;
 
         public PlayerMovingController(Player player): base(player) 
         {
-            jumpCooldown = 1f;
+            anim.SetBool("jump", false);
+            mesh.transform.localEulerAngles = GetRotation();
         }
 
         public void UpdateCrouching(bool on)
@@ -31,32 +38,76 @@ namespace DerpyExpress.Player.Controllers
 
         public override void UpdateMovement()
         {
-            UpdateJumpCooldown();
-
-            if (Input.GetButtonDown("Jump") && jumpCooldown < 0 && !isRunning())
+            if (jumpCooldownTime > 0)
             {
-                player.SetMovementController(new PlayerFlyingController(player));
+                jumpCooldownTime -= Time.deltaTime;
                 return;
             }
 
-            if (Input.GetButtonDown("Crouch"))
+            if (Input.GetButtonDown("Jump") && !isRunning())
             {
-                player.isCrouching = !player.isCrouching;
-                UpdateCrouching(player.isCrouching);
+                anim.SetBool("jump", true);
+
+                if (isJumping && !controller.isGrounded)
+                {
+                    player.SetMovementController(new PlayerFlyingController(player));
+                }
+                else
+                {
+                    isJumping = true;
+                    jumpSpeed = JUMP_SPEED;
+                    jumpCooldownTime = JUMP_START_TIME;
+                }
+                
+                return;
             }
 
             float tempSpeed = GetSpeed();
+            Vector3 dir = mesh.transform.forward * tempSpeed;
+
+            if (isJumping)
+            {
+                UpdateJumpSpeed();
+                dir.y = jumpSpeed;
+            }
+            else
+            {
+                if (Input.GetButtonDown("Crouch"))
+                {
+                    player.isCrouching = !player.isCrouching;
+                    UpdateCrouching(player.isCrouching);
+                }
+
+                dir.y -= player.gravity;
+            }
 
             if (GetInput().magnitude > 0)
             {
                 mesh.transform.localEulerAngles = GetRotation();
             }
-            
-            Vector3 dir = mesh.transform.forward * tempSpeed;
-            anim.SetFloat("speed", tempSpeed);
 
-            dir.y -= player.gravity;
+            bool isGrounded = GetIsGrounded();
+           
+            if (!isGrounded && controller.isGrounded)
+            {
+                jumpCooldownTime = LAND_TIME;
+            }
+
+            anim.SetBool("on_floor", isGrounded);
+            anim.SetFloat("speed", isGrounded ? tempSpeed : 0);
+
             controller.Move(dir * Time.deltaTime);
+        }
+
+        private bool GetIsGrounded()
+        {
+            if (groundedCheckStartCooldown > 0)
+            {
+                groundedCheckStartCooldown -= Time.deltaTime;
+                return true;
+            }
+
+            return controller.isGrounded;
         }
 
         protected override float GetSpeedTarget(Vector2 input)
@@ -82,11 +133,16 @@ namespace DerpyExpress.Player.Controllers
             return !player.isCrouching && Input.GetButton("Run");
         }
 
-        private void UpdateJumpCooldown()
+        private void UpdateJumpSpeed()
         {
-            if (jumpCooldown > 0)
+            if (jumpSpeed > MIN_JUMP_SPEED)
             {
-                jumpCooldown -= Time.deltaTime;
+                jumpSpeed -= DEACCELERATION * Time.deltaTime;
+            }
+            else
+            {
+                anim.SetBool("jump", false);
+                isJumping = false;
             }
         }
     }
