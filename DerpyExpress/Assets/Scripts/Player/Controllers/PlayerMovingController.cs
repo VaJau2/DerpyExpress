@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace DerpyExpress.Player.Controllers
 {
@@ -15,24 +14,41 @@ namespace DerpyExpress.Player.Controllers
         private float jumpCooldownTime;
         private float groundedCheckStartCooldown = 0.5f;
 
+        RaycastHit hit;
         public PlayerMovingController(Player player): base(player) 
         {
-            anim.SetBool("jump", false);
             mesh.transform.localEulerAngles = GetRotation();
         }
 
-        public void UpdateCrouching(bool on)
+        public void UpdateCrouching()
         {
-            anim.SetBool("crouch", on);
-            if (on)
+            if (Input.GetButtonDown("Crouch"))
             {
-                controller.height = 0;
-                controller.center = new Vector3(0, 0.15f, 0);
-            }
-            else
-            {
-                controller.height = 0.47f;
-                controller.center = new Vector3(0, 0.25f, 0);
+                if (player.isCrouching)
+                {
+                    Vector3 raycastFrom = mesh.transform.position;
+                    raycastFrom.y += 0.3f;
+                    bool isCollidingTop = Physics.Raycast(raycastFrom, Vector3.up, out hit, 4f);
+                    if (isCollidingTop)
+                    {
+                        return;
+                    }
+                }
+
+                bool makeCrouching = !player.isCrouching;
+                player.isCrouching = makeCrouching;
+                
+                anim.SetBool("crouch", makeCrouching);
+                if (makeCrouching)
+                {
+                    controller.height = 0;
+                    controller.center = new Vector3(0, 0.15f, 0);
+                }
+                else
+                {
+                    controller.height = 0.47f;
+                    controller.center = new Vector3(0, 0.25f, 0);
+                }
             }
         }
 
@@ -44,7 +60,7 @@ namespace DerpyExpress.Player.Controllers
                 return;
             }
 
-            if (Input.GetButtonDown("Jump") && !isRunning())
+            if (Input.GetButtonDown("Jump") && !player.isCrouching && !isRunning())
             {
                 anim.SetBool("jump", true);
 
@@ -72,11 +88,7 @@ namespace DerpyExpress.Player.Controllers
             }
             else
             {
-                if (Input.GetButtonDown("Crouch"))
-                {
-                    player.isCrouching = !player.isCrouching;
-                    UpdateCrouching(player.isCrouching);
-                }
+                UpdateCrouching();
 
                 dir.y -= player.gravity;
             }
@@ -94,6 +106,7 @@ namespace DerpyExpress.Player.Controllers
             }
 
             anim.SetBool("on_floor", isGrounded);
+            anim.SetBool("jump", false);
             anim.SetFloat("speed", isGrounded ? tempSpeed : 0);
 
             controller.Move(dir * Time.deltaTime);

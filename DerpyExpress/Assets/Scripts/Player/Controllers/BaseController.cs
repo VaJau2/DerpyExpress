@@ -4,8 +4,8 @@ namespace DerpyExpress.Player.Controllers
 {
     public abstract class BaseController
     {
-        const string CAMERA_NAME = "rotationHelper";
-        const string MESH_NAME = "derpy";
+        public const string CAMERA_NAME = "rotationHelper";
+        public const string MESH_NAME = "derpy";
 
         public Animator anim;
         protected GameObject cameraHelper;

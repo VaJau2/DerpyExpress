@@ -66,12 +66,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 10
-  jumpSpeed: 6
   crouchSpeed: 1.5
   speed: 2
   runSpeed: 6
-  flySpeed: 10
   isCrouching: 0
+  isMayStopCrouching: 0
   isFlying: 0
 --- !u!1 &195284638429588624
 GameObject:
@@ -182,7 +181,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078098663716175062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.38, z: 0.07}
+  m_LocalPosition: {x: 0, y: 0.35, z: 0.109}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -204,6 +203,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedH: 3
   speedV: 2.5
+  maxPitch: 50
+  minPitch: -25
 --- !u!1001 &5729064757004523385
 PrefabInstance:
   m_ObjectHideFlags: 0

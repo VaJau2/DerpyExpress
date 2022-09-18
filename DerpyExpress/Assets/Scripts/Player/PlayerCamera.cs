@@ -7,6 +7,8 @@ namespace DerpyExpress.Player
     {
         [SerializeField] private float speedH = 3.0f;
         [SerializeField] private float speedV = 2.5f;
+        [SerializeField] private float maxPitch = 50f;
+        [SerializeField] private float minPitch = -25f;
 
         private float yaw = 0.0f;
         private float pitch = 0.0f;
@@ -23,6 +25,7 @@ namespace DerpyExpress.Player
 
             yaw += speedH * mouseX;
             pitch -= speedV * mouseY;
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
             transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
         }
     }

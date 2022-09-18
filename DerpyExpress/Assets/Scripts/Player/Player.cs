@@ -12,18 +12,22 @@ namespace DerpyExpress.Player
         public float runSpeed = 6.5f;
 
         public bool isCrouching;
+        public bool isMayStopCrouching = true;
         public bool isFlying;
         private BaseController controller;
+        private HeadRotation headRotation;
         private float jumpCooldown;
 
         public void Start() 
         {
             controller = new PlayerMovingController(this);
+            headRotation = new HeadRotation(this);
         }
 
         public void Update() 
         {
             controller.UpdateMovement();
+            headRotation.Update();
         }
 
         public void SetMovementController(BaseController newController)
