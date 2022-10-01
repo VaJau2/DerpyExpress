@@ -37,7 +37,7 @@ namespace DerpyExpress.Player.Controllers
             return transform.Find(name).gameObject;
         }
 
-        protected float GetLepredValue(float value, float needValue, float step, float acceleration, float deacceleration)
+        public static float GetLepredValue(float value, float needValue, float step, float acceleration, float deacceleration)
         {
             if (value > needValue + step)
             {
