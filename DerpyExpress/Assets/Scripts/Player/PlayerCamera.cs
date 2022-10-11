@@ -50,6 +50,11 @@ namespace DerpyExpress.Player
 
         public void Update()
         {
+            if (Time.timeScale == 0)
+            {
+                return;
+            }
+            
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
 
