@@ -10,6 +10,7 @@ namespace DerpyExpress.Player.Controllers
         private const float MIN_JUMP_SPEED = 1f;
         private const float DEACCELERATION = 5f;
         private bool isJumping;
+        private bool isLanding;
         private float jumpSpeed;
         private float jumpCooldownTime;
         private float groundedCheckStartCooldown = 0.5f;
@@ -99,9 +100,10 @@ namespace DerpyExpress.Player.Controllers
             }
 
             bool isGrounded = GetIsGrounded();
-           
-            if (!isGrounded && controller.isGrounded)
+
+            if (isLanding && isGrounded)
             {
+                isLanding = false;
                 jumpCooldownTime = LAND_TIME;
             }
 
@@ -114,6 +116,12 @@ namespace DerpyExpress.Player.Controllers
 
         private bool GetIsGrounded()
         {
+            if (Time.timeScale == 0)
+            {
+                groundedCheckStartCooldown = 1;
+                return true;
+            }
+
             if (groundedCheckStartCooldown > 0)
             {
                 groundedCheckStartCooldown -= Time.deltaTime;
@@ -156,6 +164,7 @@ namespace DerpyExpress.Player.Controllers
             {
                 anim.SetBool("jump", false);
                 isJumping = false;
+                isLanding = true;
             }
         }
     }
